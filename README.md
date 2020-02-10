@@ -24,15 +24,15 @@ the list of supported commands.
 Commands
 =======
 
-###clear-suspect-blobs
+### clear-suspect-blobs
 The `clear-suspect-blobs` command takes no arguments and will clear all
 suspect tape blobs.
 
-###list-suspect-blobs
+### list-suspect-blobs
 The `list-suspect-blobs` command takes no arguments and will list all
 suspect tape blobs.
 
-###stage
+### stage
 The `stage` command is used to stage content from an existing BP pool.
 This command takes 2 arguments `BUCKET_NAME` and `POOL_NAME`.
 `BUCKET_NAME` is the name of the bucket that you wish to stage content
