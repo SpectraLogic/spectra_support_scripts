@@ -10,5 +10,5 @@ setup(
         'DS3-SDK@git+https://github.com/spectralogic/ds3_python3_sdk@v5.0.3#egg=DS3-SDK'
     ],
     entry_points={
-        'console_scripts': ['spectra-support=stage.stage:support']
+        'console_scripts': ['spectra-support=support.support:support']
     })
