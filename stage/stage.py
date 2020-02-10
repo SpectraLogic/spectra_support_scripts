@@ -8,6 +8,14 @@ def support():
 
 
 @click.command()
+def list_suspect_blobs():
+    print("Listing suspect blob ids")
+    client = ds3.createClientFromEnv()
+    for blob in suspect_blob_ids(client):
+        print("suspect blob id {}".format(blob))
+
+
+@click.command()
 def clear_suspect_blobs():
     print("Clearing all suspect blobs on tape")
     client = ds3.createClientFromEnv()
@@ -23,26 +31,24 @@ def clear_suspect_blobs():
 
 
 def clear_blobs(client, blob_list):
-    response = client.clear_suspect_blob_tapes_spectra_s3(ds3.ClearSuspectBlobTapesSpectraS3Request(blob_list))
-    if response.response.status_code != 200:
-        print("Failed to send clear suspect blob command")
-        exit(1)
+    print("blob list: {}".format(blob_list))
+    client.clear_suspect_blob_tapes_spectra_s3(ds3.ClearSuspectBlobTapesSpectraS3Request(blob_list))
 
 
 def suspect_blob_ids(client):
     total_objects = 0
-    page_size = 100
+    page_size = 5
     response = client.get_suspect_blob_tapes_spectra_s3(ds3.GetSuspectBlobTapesSpectraS3Request(page_length=page_size))
     for blob in response.result['SuspectBlobTapeList']:
         total_objects += 1
-        yield blob['BlobId']
+        yield blob['Id']
 
     page_offset = 1
     while total_objects < response.paging_total_result_count:
-        response = client.get_suspect_blob_tapes_spectra_s3(ds3.GetSuspectBlobTapesSpectraS3Request(page_length=page_size, page_offset=page_offset))
+        response = client.get_suspect_blob_tapes_spectra_s3(ds3.GetSuspectBlobTapesSpectraS3Request(page_length=page_size, page_offset=page_offset * page_size))
         for blob in response.result['SuspectBlobTapeList']:
             total_objects += 1
-            yield blob['BlobId']
+            yield blob['Id']
 
 
 @click.command()
@@ -81,4 +87,5 @@ def create_stage_job(buffer, client, bucket_name):
 
 
 support.add_command(clear_suspect_blobs)
+support.add_command(list_suspect_blobs)
 support.add_command(stage)
